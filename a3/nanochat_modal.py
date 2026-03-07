@@ -543,6 +543,23 @@ def stage_final_report() -> None:
 
 
 # =============================================================================
+# STAGE 6: CHAT SAMPLE
+# =============================================================================
+@app.function(
+    image=image,
+    secrets=[secret],
+    volumes={VOLUME_MOUNT: volume},
+    gpu="H100:1",
+    timeout=60 * 30,
+)
+def stage_chat_sample() -> None:
+    _setup_cache()
+    print("Generating chat samples...")
+    _python("scripts.chat_cli", ['-p "What is the opposite of the word ephemeral?"', "-i sft"])
+
+    volume.commit()
+
+# =============================================================================
 # FULL SPEEDRUN PIPELINE (main entrypoint)
 # =============================================================================
 
